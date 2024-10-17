@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "724795499845",
+    "project_id": "appeurokampssebastian",
+    "storage_bucket": "appeurokampssebastian.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:724795499845:android:4598899df0f979b20fca2c",
+        "android_client_info": {
+          "package_name": "org.eurekamps.dam2_2425_actividad1"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyARbMFbsytTF9dkYSOgSkwrauth-Mn3IsI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
