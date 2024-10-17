@@ -7,37 +7,82 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.ProgressBar
 import androidx.navigation.fragment.findNavController
+import com.google.firebase.auth.FirebaseAuth
 import org.eurekamps.dam2_2425_actividad1.R
 
 
 class SplashFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
+    private lateinit var auth: FirebaseAuth
+    private lateinit var firestore: FirebaseFirestore
+    private lateinit var progressBar: ProgressBar
+    private lateinit var splashImageView: ImageView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_splash, container, false)
-    }
+        val view = inflater.inflate(R.layout.fragment_splash, container, false)
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+        // Inicializar Firebase Auth y Firestore
+        auth = FirebaseAuth.getInstance()
+        firestore = FirebaseFirestore.getInstance()
 
-        // Simular el tiempo de carga del splash
+        // Inicializar los componentes de la interfaz
+        progressBar = view.findViewById(R.id.progress_bar)
+        splashImageView = view.findViewById(R.id.splash_image)
+
+        // Lógica para el splash
         Handler(Looper.getMainLooper()).postDelayed({
-            // Navegar hacia el LoginFragment
-            findNavController().navigate(R.id.action_splashFragment_to_loginFragment)
-        }, 3000) // 3000 ms = 3 segundos
+            checkUserStatus()
+        }, 3000) // Espera 3 segundos
+
+        return view
     }
 
+    private fun checkUserStatus() {
+        val currentUser = auth.currentUser
+        if (currentUser != null) {
+            // Usuario está logeado, verificar si tiene perfil
+            checkUserProfile(currentUser.uid)
+        } else {
+            // Usuario no logeado
+            navigateToLogin()
+        }
+    }
 
+    private fun checkUserProfile(userId: String) {
+        firestore.collection("Profiles").document(userId)
+            .get()
+            .addOnSuccessListener { document ->
+                if (document.exists()) {
+                    // Usuario logeado y con perfil
+                    navigateToHome()
+                } else {
+                    // Usuario logeado y sin perfil
+                    navigateToProfile()
+                }
+            }
+            .addOnFailureListener {
+                // Manejar errores
+                Toast.makeText(requireContext(), "Error al verificar perfil", Toast.LENGTH_SHORT).show()
+            }
+    }
+
+    private fun navigateToLogin() {
+        progressBar.visibility = View.GONE // Ocultar la barra de progreso
+        findNavController().navigate(R.id.action_splashFragment_to_loginFragment)
+    }
+
+    private fun navigateToProfile() {
+        progressBar.visibility = View.GONE // Ocultar la barra de progreso
+        findNavController().navigate(R.id.action_splashFragment_to_profileFragment)
+    }
+
+    private fun navigateToHome() {
+        progressBar.visibility = View.GONE // Ocultar la barra de progreso
+        findNavController().navigate(R.id.action_splashFragment_to_homeActivity)
+    }
 }
