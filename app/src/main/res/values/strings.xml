@@ -1,3 +1,7 @@
 <resources>
-    <string name="app_name">DAM2_2425_Actividad1</string>
+    <string name="app_name">Mi Aplicación</string>
+    <string name="login">Iniciar Sesión</string>
+    <string name="register">Registrarse</string>
+    <string name="email_hint">Correo electrónico</string>
+    <string name="password_hint">Contraseña</string>
 </resources>
