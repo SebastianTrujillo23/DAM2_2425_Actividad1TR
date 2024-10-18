@@ -50,5 +50,7 @@ dependencies {
     implementation("androidx.navigation:navigation-ui-ktx:2.7.0")
     implementation(platform("com.google.firebase:firebase-bom:33.4.0"))
     implementation("com.google.firebase:firebase-analytics")
+    implementation ("com.google.firebase:firebase-database-ktx:20.3.0")
+    implementation ("com.google.firebase:firebase-auth-ktx:22.0.0")
     implementation("com.google.firebase:firebase-auth")
 }
