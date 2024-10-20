@@ -43,5 +43,16 @@
     <fragment
         android:id="@+id/profileFragment"
         android:name="org.eurekamps.dam2_2425_actividad1.fragments.ProfileFragment"
-        android:label="ProfileFragment" />
+        android:label="ProfileFragment" >
+        <action
+            android:id="@+id/action_profileFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_pruebaFragment2"
+            app:destination="@id/pruebaFragment2" />
+    </fragment>
+    <fragment
+        android:id="@+id/pruebaFragment2"
+        android:name="org.eurekamps.dam2_2425_actividad1.fragments.PruebaFragment"
+        android:label="PruebaFragment" />
 </navigation>
