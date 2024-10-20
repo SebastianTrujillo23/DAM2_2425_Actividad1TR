@@ -4,57 +4,55 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
-import org.eurekamps.dam2_2425_actividad1.Adapters.ProfilesAdapter
+import com.google.firebase.firestore.FirebaseFirestore
 import org.eurekamps.dam2_2425_actividad1.R
-
+import org.eurekamps.dam2_2425_actividad1.adapters.ProfilesAdapter
 import org.eurekamps.dam2_2425_actividad1.singletone.Profile
 
 class PruebaFragment : Fragment() {
 
     private lateinit var recyclerView: RecyclerView
-    private lateinit var profileAdapter: ProfilesAdapter
-    private lateinit var database: DatabaseReference
+    private lateinit var profilesAdapter: ProfilesAdapter
+    private val db = FirebaseFirestore.getInstance()
+    private val profilesList = mutableListOf<Profile>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_prueba, container, false)
-    }
+        val view = inflater.inflate(R.layout.fragment_prueba, container, false)
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
         recyclerView = view.findViewById(R.id.profiles_recycler_view)
         recyclerView.layoutManager = LinearLayoutManager(context)
+        profilesAdapter = ProfilesAdapter(profilesList)
+        recyclerView.adapter = profilesAdapter
 
-        database = FirebaseDatabase.getInstance().getReference("Profiles")
         loadProfiles()
+
+        return view
     }
 
     private fun loadProfiles() {
-        database.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                val profilesList = mutableListOf<Profile>()
-                for (profileSnapshot in snapshot.children) {
-                    val profile = profileSnapshot.getValue(Profile::class.java)
-                    profile?.let { profilesList.add(it) }
+        db.collection("profiles")
+            .get()
+            .addOnSuccessListener { documents ->
+                profilesList.clear()  // Limpiar la lista antes de agregar nuevos perfiles
+                for (document in documents) {
+                    val profile = document.toObject(Profile::class.java)
+                    profilesList.add(profile)
                 }
-                profileAdapter = ProfilesAdapter(profilesList)
-                recyclerView.adapter = profileAdapter
+                profilesAdapter.notifyDataSetChanged()  // Notificar al adaptador que los datos han cambiado
             }
-
-            override fun onCancelled(error: DatabaseError) {
-                // Manejo de errores
+            .addOnFailureListener { e ->
+                Toast.makeText(context, "Error al cargar perfiles: ${e.message}", Toast.LENGTH_SHORT).show()
             }
-        })
     }
 }
+
+
+
 
