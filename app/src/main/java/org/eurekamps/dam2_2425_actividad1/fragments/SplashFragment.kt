@@ -32,7 +32,6 @@ class SplashFragment : Fragment() {
         Handler(Looper.getMainLooper()).postDelayed({
             val action = when {
                 currentUser == null && ProfileDataHolder.profile == null -> R.id.action_splashFragment_to_loginFragment
-
                 currentUser == null && ProfileDataHolder.profile != null -> R.id.action_splashFragment_to_loginFragment
                 currentUser != null && ProfileDataHolder.profile != null -> R.id.action_splashFragment_to_homeActivity
                 else -> R.id.action_splashFragment_to_loginFragment
