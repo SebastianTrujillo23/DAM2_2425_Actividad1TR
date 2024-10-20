@@ -17,13 +17,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- EditText for email input -->
 
-    <!-- EditText for password input -->
-
-    <!-- EditText for confirming password input -->
-
-    <!-- Button for going back on the bottom left -->
 
     <EditText
         android:id="@+id/emailEditText"
